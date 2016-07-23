@@ -131,24 +131,12 @@ function initMap() {
                 map.setCenter(pos);
                 marker.setPosition(pos);
             });
-        }, function() {
-            infoWindow.setPosition(pos);
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-
-    } else {
-         handleLocationError(true, infoWindow, map.getCenter());
+        }
     }
 
     initSidebar();
 };
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-        'Error: The Geolocation service failed.' :
-        'Error: Your browser doesn\'t support geolocation.');
 
-}
 function initSidebar() {
     $('#gyms-switch').prop('checked', localStorage.showGyms === 'true');
     $('#pokemon-switch').prop('checked', localStorage.showPokemon === 'true');
