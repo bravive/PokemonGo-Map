@@ -84,7 +84,16 @@ function initMap() {
               'style_pgo']
         },
     });
+    marker = new google.maps.Marker({
+        position: {
+            lat: center_lat,
+            lng: center_lng
+        },
+        map: map,
+        animation: google.maps.Animation.DROP
+    });
 
+    var infoWindow = new google.maps.InfoWindow({map: map});
 	var style_dark = new google.maps.StyledMapType(darkStyle, {name: "Dark"});
 	map.mapTypes.set('dark_style', style_dark);
 
@@ -123,26 +132,23 @@ function initMap() {
                 marker.setPosition(pos);
             });
         }, function() {
-            var infoWindow = new google.maps.InfoWindow({map: map});
+            infoWindow.setPosition(pos);
             handleLocationError(true, infoWindow, map.getCenter());
         });
 
     } else {
-        marker = new google.maps.Marker({
-            position: {
-                lat: center_lat,
-                lng: center_lng
-            },
-            map: map,
-            animation: google.maps.Animation.DROP
-        });
-
-        var infoWindow = new google.maps.InfoWindow({map: map});
+         handleLocationError(true, infoWindow, map.getCenter());
     }
 
     initSidebar();
 };
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
 
+}
 function initSidebar() {
     $('#gyms-switch').prop('checked', localStorage.showGyms === 'true');
     $('#pokemon-switch').prop('checked', localStorage.showPokemon === 'true');
