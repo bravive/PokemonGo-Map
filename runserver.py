@@ -8,6 +8,7 @@ import time
 
 from threading import Thread
 from flask_cors import CORS, cross_origin
+from OpenSSL import SSL
 
 from pogom import config
 from pogom.app import Pogom
@@ -72,9 +73,12 @@ if __name__ == '__main__':
     else:
         config['GMAPS_KEY'] = load_credentials(os.path.dirname(os.path.realpath(__file__)))['gmaps_key']
 
+    context = SSL.Context(SSL.SSLv23_METHOD)
+    context.use_privatekey_file('key.pem')
+    context.use_certificate_file('cert.pem')
     if args.no_server:
         while not search_thread.isAlive():
             time.sleep(1)
         search_thread.join()
     else:
-        app.run(threaded=True, debug=args.debug, host=args.host, port=args.port)
+        app.run(ssl_context=context, threaded=True, debug=args.debug, host=args.host, port=args.port)
