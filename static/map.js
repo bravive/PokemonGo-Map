@@ -131,7 +131,7 @@ function initMap() {
                 map.setCenter(pos);
                 marker.setPosition(pos);
             });
-        }
+        });
     }
 
     initSidebar();
