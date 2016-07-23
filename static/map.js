@@ -107,25 +107,23 @@ function initMap() {
         // Try HTML5 geolocation.
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
 
-        marker = new google.maps.Marker({
-            position: pos,
-            map: map,
-            animation: google.maps.Animation.DROP
-        });
-        $.post("/next_loc?lat=" + pos.lat + "&lon=" + pos.lng, {}).done(function (data) {
-            $("#next-location").val("");
-            map.setCenter(pos);
-            marker.setPosition(pos);
-        });
-
-        var infoWindow = new google.maps.InfoWindow({map: map});
-
+            marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
+            $.post("/next_loc?lat=" + pos.lat + "&lon=" + pos.lng, {}).done(function (data) {
+                $("#next-location").val("");
+                map.setCenter(pos);
+                marker.setPosition(pos);
+            });
         }, function() {
+            var infoWindow = new google.maps.InfoWindow({map: map});
             handleLocationError(true, infoWindow, map.getCenter());
         });
 
