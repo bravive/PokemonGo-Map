@@ -16,7 +16,6 @@ class Pogom(Flask):
         super(Pogom, self).__init__(import_name, **kwargs)
         self.json_encoder = CustomJSONEncoder
         self.route("/", methods=['GET'])(self.fullmap)
-        self.route("/position", methods=['GET'])(self.fullmap_pos)
         self.route("/raw_data", methods=['GET'])(self.raw_data)
         self.route("/loc", methods=['GET'])(self.loc)
         self.route("/next_loc", methods=['POST'])(self.next_loc)
@@ -28,17 +27,6 @@ class Pogom(Flask):
                                lng=config['ORIGINAL_LONGITUDE'],
                                gmaps_key=config['GMAPS_KEY'],
                                lang=config['LOCALE'])
-
-    def fullmap_pos(self):
-        if request.args.get('x'):
-            config['ORIGINAL_LATITUDE'] = float(request.args.get('x'))
-        if request.args.get('y'):
-            config['ORIGINAL_LONGITUDE'] = float(request.args.get('y'))
-        if request.args.get('name'):
-            position = get_pos_by_name(request.args.get('name'))
-            config['ORIGINAL_LATITUDE'] = position[0]
-            config['ORIGINAL_LONGITUDE'] = position[1]
-        return self.fullmap()
 
     def raw_data(self):
         d = {}

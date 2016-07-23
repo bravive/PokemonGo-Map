@@ -144,9 +144,6 @@ def search(args, i):
         log.info('Completed {:5.2f}% of scan.'.format(float(step) / num_steps**2*100))
         time.sleep(config['REQ_SLEEP'])
 
-        if position != (config['ORIGINAL_LATITUDE'], config['ORIGINAL_LONGITUDE'], 0):
-            return
-
 def search_loop(args):
     i = 0
     try:

@@ -104,14 +104,43 @@ function initMap() {
 
     map.setMapTypeId(localStorage['map_style']);
 
-    marker = new google.maps.Marker({
-        position: {
-            lat: center_lat,
-            lng: center_lng
-        },
-        map: map,
-        animation: google.maps.Animation.DROP
-    });
+        // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+
+        marker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            animation: google.maps.Animation.DROP
+        });
+        $.post("/next_loc?lat=" + pos.lat + "&lon=" + pos.lng, {}).done(function (data) {
+            $("#next-location").val("");
+            map.setCenter(pos);
+            marker.setPosition(pos);
+        });
+
+        var infoWindow = new google.maps.InfoWindow({map: map});
+
+        }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+        });
+
+    } else {
+        marker = new google.maps.Marker({
+            position: {
+                lat: center_lat,
+                lng: center_lng
+            },
+            map: map,
+            animation: google.maps.Animation.DROP
+        });
+
+        var infoWindow = new google.maps.InfoWindow({map: map});
+    }
 
     initSidebar();
 };
@@ -126,7 +155,6 @@ function initSidebar() {
 
     searchBox.addListener('places_changed', function() {
         var places = searchBox.getPlaces();
-
         if (places.length == 0) {
             return;
         }
